@@ -1,22 +1,28 @@
 version: 0.2
 
-#env:
-  #variables:
-     # key: "value"
-     # key: "value"
+env:
+  variables:
+      LAMBDA_NAME: "LPOptimizeFunction"
+      BUCKET_NAME: "ksrtc-data-pool"
   #parameter-store:
      # key: "value"
      # key: "value"
 
 phases:
-  #install:
-    #commands:
-      # - command
-      # - command
-  #pre_build:
-    #commands:
-      # - command
-      # - command
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+       - apt-get update
+       - apt-get install zip
+  pre_build:
+    commands:
+       - cp -r sam-lambda-python/LPOptimize ./LPOptimize
+       - cp -r sam-lambda-python/template.yaml .
+       - python -m venv venv
+       - source . venv/bin/activate
+       - pip install -r LPOptimize/requirements.txt
+       - aws cloudformation package --template-file template.yaml --s3-bucket $BUCKET --output-template-file outputlambda.yml
   build:
     commands:
       - echo Hello from CodeBuild
