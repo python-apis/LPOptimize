@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-lambda-python
+
+  Sample SAM Template for sam-lambda-python
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 60
+
+Resources:
+  LPOptimizeFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Role: arn:aws:iam::135671745449:role/lambda-lpoptimize # role to read s3 buckets
+      FunctionName: LPOptimize
+      Description: Optimize by Linear Programming
+      CodeUri: LPOptimize/
+      Handler: optimize.lambda_handler
+      Runtime: python3.8
+      Events:
+        LPOptimizeAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /getOptimizedBuses
+            Method: get
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  LPOptimizeAPI:
+    Description: "API Gateway endpoint URL for Prod stage for LP Optimize function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/getOptimizedBuses/"
+  LPOptimizeFunction:
+    Description: "LP Optimization Lambda Function ARN"
+    Value: !GetAtt LPOptimizeFunction.Arn
+#  LPOptimizeFunctionIamRole:
+#    Description: "Implicit IAM Role created for Hello World function"
+#    Value: !GetAtt LPOptimizeFunctionRole.Arn

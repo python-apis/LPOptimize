@@ -1,0 +1,47 @@
+# Initialize the SAM project
+
+found the below tag help by
+> sam init -h
+> sam init --name sam-lambda-python --runtime python3.7.x --dependency-manager pip3 --app-template hello-world
+
+To execute the project locally do following
+sam local invoke <function name> --event <json file>
+                            OR   --no-event
+
+But it will throw erro because default profile [default] does not have the key
+use below
+> export AWS_PROFILE=user1
+
+
+to simulate API gateway url here it is:
+> sam local start-api
+
+Then run below in the browser
+http://127.0.0.1:3000/getOptimizedBuses
+
+Now for deployment do the following
+sam package --template-file <template yaml file> --output-template-file deploy.yaml --s3-bucket <bucket name>
+
+It will create a zip file inside the s3 bucket and deploy.yaml for deployment
+use below to deploy
+
+> aws cloudformation deploy
+
+For code pipeline do following:
+https://docs.aws.amazon.com/lambda/latest/dg/build-pipeline.html
+
+Reference details:
+https://adrian.tengamnuay.me/programming/2018/07/01/continuous-deployment-with-aws-lambda/
+
+
+Use aws code commit for version control to save money
+follow below
+https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-ssh-unixes.html
+
+> ssh-keygen -t rsa -b 4096 -C "my_work_email@my_company.com"
+
+multiple ssh keys:
+https://medium.com/@xiaolishen/use-multiple-ssh-keys-for-different-github-accounts-on-the-same-computer-7d7103ca8693
+
+
+generate a new key pass phrase hello123
